@@ -33,7 +33,7 @@ namespace TestResultMatrix
         {
             AddIntersectionStyles();
             GenerateHeaders();
-            GenerateIntersections();
+            //GenerateIntersections();
 
             StyleSheet();
         }
@@ -61,7 +61,7 @@ namespace TestResultMatrix
                          select new KeyValuePair<string, int>(res.Key, res.Count());
 
             var stateCol = 4;
-            new[] { "Passed", "Failed", "Blocked", "Not run" }.ToList().ForEach(state =>
+            new[] { "Not run", "Blocked","Failed", "Passed"  }.ToList().ForEach(state =>
                 {
                     var total = GetTotal(state, totals);
                     if (total == 0)
@@ -96,11 +96,11 @@ namespace TestResultMatrix
                 GenerateTotals(req, row++);
             }
 
-            int col = TestCaseColOffset;
-            foreach (var test in Matrix.Tests.OrderBy(t => t.Id))
-            {
-                Worksheet.Cells[2, col++] = string.Format("[{0}] {1}", test.Id, test.Title);
-            }
+            //int col = TestCaseColOffset;
+            //foreach (var test in Matrix.Tests.OrderBy(t => t.Id))
+            //{
+            //    Worksheet.Cells[2, col++] = string.Format("[{0}] {1}", test.Id, test.Title);
+            //}
         }
 
         private void GenerateIntersections()
@@ -127,10 +127,10 @@ namespace TestResultMatrix
             Worksheet.Cells[3, 1] = "ID";
             Worksheet.Cells[3, 2] = "Title";
             Worksheet.Cells[3, 3] = "State";
-            Worksheet.Cells[3, 4] = "Passed";
-            Worksheet.Cells[3, 5] = "Failed";
-            Worksheet.Cells[3, 6] = "Blocked";
-            Worksheet.Cells[3, 7] = "Not Run";
+            Worksheet.Cells[3, 4] = "Not Run";
+            Worksheet.Cells[3, 5] = "Blocked";
+            Worksheet.Cells[3, 6] = "Failed";
+            Worksheet.Cells[3, 7] = "Passed";
 
             // autofit the columns
             for (int i = 1; i <= 3; i++)
@@ -143,56 +143,56 @@ namespace TestResultMatrix
                 Worksheet.Cells[1, i].EntireColumn.ColumnWidth = 7d;
             }
 
-            for (int i = TestCaseColOffset; i < TestCaseColOffset + Matrix.Tests.Count; i++)
-            {
-                Worksheet.Cells[1, i].EntireColumn.ColumnWidth = 5d;
-            }
+            ////for (int i = TestCaseColOffset; i < TestCaseColOffset + Matrix.Tests.Count; i++)
+            ////{
+            ////    Worksheet.Cells[1, i].EntireColumn.ColumnWidth = 5d;
+            ////}
 
-            // format test column to orient to 45 degrees with borders
-            var testHeaderRange = Worksheet.Range[Worksheet.Cells[2, TestCaseColOffset], Worksheet.Cells[2, TestCaseColOffset + Matrix.Tests.Count]];
-            testHeaderRange.Orientation = 45;
-            testHeaderRange.Borders[XlBordersIndex.xlInsideVertical].LineStyle = XlLineStyle.xlContinuous;
-            testHeaderRange.Borders[XlBordersIndex.xlInsideVertical].Weight = 1d;
-            testHeaderRange.Borders[XlBordersIndex.xlInsideVertical].Color = XlRgbColor.rgbBlack;
-            testHeaderRange.Borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-            testHeaderRange.Borders[XlBordersIndex.xlEdgeLeft].Weight = 1d;
-            testHeaderRange.Borders[XlBordersIndex.xlEdgeLeft].Color = XlRgbColor.rgbBlack;
+            ////// format test column to orient to 45 degrees with borders
+            ////var testHeaderRange = Worksheet.Range[Worksheet.Cells[2, TestCaseColOffset], Worksheet.Cells[2, TestCaseColOffset + Matrix.Tests.Count]];
+            ////testHeaderRange.Orientation = 45;
+            ////testHeaderRange.Borders[XlBordersIndex.xlInsideVertical].LineStyle = XlLineStyle.xlContinuous;
+            ////testHeaderRange.Borders[XlBordersIndex.xlInsideVertical].Weight = 1d;
+            ////testHeaderRange.Borders[XlBordersIndex.xlInsideVertical].Color = XlRgbColor.rgbBlack;
+            ////testHeaderRange.Borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
+            ////testHeaderRange.Borders[XlBordersIndex.xlEdgeLeft].Weight = 1d;
+            ////testHeaderRange.Borders[XlBordersIndex.xlEdgeLeft].Color = XlRgbColor.rgbBlack;
 
-            // format headers
-            var headerRange = Worksheet.Range[Worksheet.Cells[3, 1], Worksheet.Cells[3, TestCaseColOffset - 1]];
-            headerRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
-            headerRange.Interior.Color = XlRgbColor.rgbLightGray;
+            ////// format headers
+            ////var headerRange = Worksheet.Range[Worksheet.Cells[3, 1], Worksheet.Cells[3, TestCaseColOffset - 1]];
+            ////headerRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
+            ////headerRange.Interior.Color = XlRgbColor.rgbLightGray;
 
-            // borders for reqs, summary and matrix
-            var reqRange = Worksheet.Range[Worksheet.Cells[3, 1], Worksheet.Cells[3 + Matrix.Requirements.Count, 3]];
-            reqRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
+            ////// borders for reqs, summary and matrix
+            ////var reqRange = Worksheet.Range[Worksheet.Cells[3, 1], Worksheet.Cells[3 + Matrix.Requirements.Count, 3]];
+            ////reqRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
 
-            var summaryRange = Worksheet.Range[Worksheet.Cells[3, 4], Worksheet.Cells[3 + Matrix.Requirements.Count, 7]];
-            summaryRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
+            ////var summaryRange = Worksheet.Range[Worksheet.Cells[3, 4], Worksheet.Cells[3 + Matrix.Requirements.Count, 7]];
+            ////summaryRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
 
-            var matrixRange = Worksheet.Range[Worksheet.Cells[3, TestCaseColOffset], Worksheet.Cells[3 + Matrix.Requirements.Count, TestCaseColOffset + Matrix.Tests.Count - 1]];
-            matrixRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
+            ////var matrixRange = Worksheet.Range[Worksheet.Cells[3, TestCaseColOffset], Worksheet.Cells[3 + Matrix.Requirements.Count, TestCaseColOffset + Matrix.Tests.Count - 1]];
+            ////matrixRange.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlThin, null, XlRgbColor.rgbBlack);
 
-            // color format for summary section
-            var passRange = Worksheet.Range[Worksheet.Cells[4, 4], Worksheet.Cells[4 + Matrix.Requirements.Count, 4]];
-            var passBar = passRange.FormatConditions.AddDatabar();
-            passBar.BarColor.Color = XlRgbColor.rgbGreen;
+            ////// color format for summary section
+            ////var passRange = Worksheet.Range[Worksheet.Cells[4, 4], Worksheet.Cells[4 + Matrix.Requirements.Count, 4]];
+            ////var passBar = passRange.FormatConditions.AddDatabar();
+            ////passBar.BarColor.Color = XlRgbColor.rgbGreen;
 
-            var failRange = Worksheet.Range[Worksheet.Cells[4, 5], Worksheet.Cells[4 + Matrix.Requirements.Count, 5]];
-            var failBar = failRange.FormatConditions.AddDatabar();
-            failBar.BarColor.Color = XlRgbColor.rgbRed;
+            ////var failRange = Worksheet.Range[Worksheet.Cells[4, 5], Worksheet.Cells[4 + Matrix.Requirements.Count, 5]];
+            ////var failBar = failRange.FormatConditions.AddDatabar();
+            ////failBar.BarColor.Color = XlRgbColor.rgbRed;
 
-            var blockedRange = Worksheet.Range[Worksheet.Cells[4, 6], Worksheet.Cells[4 + Matrix.Requirements.Count, 6]];
-            var blockedBar = blockedRange.FormatConditions.AddDatabar();
-            blockedBar.BarColor.Color = XlRgbColor.rgbOrange;
+            ////var blockedRange = Worksheet.Range[Worksheet.Cells[4, 6], Worksheet.Cells[4 + Matrix.Requirements.Count, 6]];
+            ////var blockedBar = blockedRange.FormatConditions.AddDatabar();
+            ////blockedBar.BarColor.Color = XlRgbColor.rgbOrange;
 
-            var notRunRange = Worksheet.Range[Worksheet.Cells[4, 7], Worksheet.Cells[4 + Matrix.Requirements.Count, 7]];
-            var notRunBar = notRunRange.FormatConditions.AddDatabar();
-            notRunBar.BarColor.Color = XlRgbColor.rgbLightBlue;
+            ////var notRunRange = Worksheet.Range[Worksheet.Cells[4, 7], Worksheet.Cells[4 + Matrix.Requirements.Count, 7]];
+            ////var notRunBar = notRunRange.FormatConditions.AddDatabar();
+            ////notRunBar.BarColor.Color = XlRgbColor.rgbLightBlue;
 
-            // add filters to header row
-            var allHeaderRange = Worksheet.Range[Worksheet.Cells[3, 1], Worksheet.Cells[3, TestCaseColOffset + Matrix.Tests.Count - 1]];
-            allHeaderRange.AutoFilter();
+            ////// add filters to header row
+            ////var allHeaderRange = Worksheet.Range[Worksheet.Cells[3, 1], Worksheet.Cells[3, TestCaseColOffset + Matrix.Tests.Count - 1]];
+            ////allHeaderRange.AutoFilter();
         }
     }
 }

@@ -138,15 +138,25 @@ namespace TestResultMatrix
 
         private string GetLatestTestResult(int testId, ITestPlanCollection plans)
         {
+            //System.Diagnostics.Debug.Print("----------------------------------------------");
+            //System.Diagnostics.Debug.Print(string.Format("Test case Id:{0}", testId));
             ITestPoint mostRecentPoint = null;
             foreach (ITestPlan plan in plans)
             {
                 var points = plan.QueryTestPoints(string.Format("SELECT * FROM TestPoint WHERE TestCaseId = {0}", testId));
+                //System.Diagnostics.Debug.Print(string.Format("Test Plan Id:{0} Name:{1} Iteration:{2} ResultPoints:{3}", plan.Id, plan.Name, plan.Iteration, points.Count.ToString()));
                 foreach (ITestPoint point in points)
                 {
-                    if (mostRecentPoint == null || mostRecentPoint.LastUpdated < point.LastUpdated)
+                    //if (mostRecentPoint != null) System.Diagnostics.Debug.Print(string.Format("Current most recent Point last updated:{0}", mostRecentPoint.LastUpdated.ToString("dd/MMM/yyyy HH:mm:ss")));
+                    //System.Diagnostics.Debug.Print(string.Format("Test Point last updated:{0}", point.LastUpdated.ToString("dd/MMM/yyyy HH:mm:ss")));
+                    //if (mostRecentPoint == null || mostRecentPoint.LastUpdated < point.LastUpdated)
+                    if (mostRecentPoint == null ||
+                        mostRecentPoint.MostRecentResult == null ||
+                        (mostRecentPoint.LastUpdated < point.LastUpdated && point.MostRecentResult != null)
+                        )
                     {
                         mostRecentPoint = point;
+                        //System.Diagnostics.Debug.Print(string.Format("SET - Most Recent Point to last updated:{0} Test Plan Id:{1} Name:{2} Iteration:{3} ", point.LastUpdated.ToString("dd/MMM/yyyy HH:mm:ss"), plan.Id, plan.Name, plan.Iteration));
                     }
                 }
             }
@@ -160,7 +170,9 @@ namespace TestResultMatrix
             if (mostRecentPoint.MostRecentResult != null)
             {
                 mostRecent = mostRecentPoint.MostRecentResult.Outcome.ToString();
+                //System.Diagnostics.Debug.Print(string.Format("Most Recent outcome set:{0}", mostRecent));
             }
+            //System.Diagnostics.Debug.Print(string.Format("Most Recent outcome returning:{0}", mostRecent));
             return mostRecent;
         }
     }
